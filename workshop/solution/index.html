@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Applications Workshop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .app-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .app-title {
+            font-size: 1.5rem;
+            color: #5a67d8;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-icon {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+        
+        .app-description {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #5a67d8;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .btn {
+            background: #5a67d8;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background: #4c51bf;
+        }
+        
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #5a67d8;
+        }
+        
+        .result h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .result-item {
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .result-value {
+            color: #2d3748;
+        }
+        
+        .sentiment-positive {
+            color: #38a169;
+            font-weight: 600;
+        }
+        
+        .sentiment-negative {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+        
+        .sentiment-neutral {
+            color: #718096;
+            font-weight: 600;
+        }
+        
+        .word-freq {
+            display: inline-block;
+            background: #edf2f7;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .chat-history {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        
+        .user-message {
+            background: #e6fffa;
+            text-align: right;
+        }
+        
+        .bot-message {
+            background: #ebf8ff;
+            text-align: left;
+        }
+        
+        .image-canvas {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin: 10px 0;
+            max-width: 100%;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .app-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 AI Applications Workshop</h1>
+            <p class="subtitle">Explore different AI capabilities with these interactive demos</p>
+        </header>
+        
+        <div class="apps-grid">
+            <!-- Chatbot Application -->
+            <div class="app-card">
+                <h2 class="app-title">
+                    <span class="app-icon">💬</span>
+                    AI Chatbot
+                </h2>
+                <p class="app-description">
+                    Chat with an AI that can answer questions about artificial intelligence, 
+                    machine learning, and related topics.
+                </p>
+                
+                <div class="chat-history" id="chatHistory">
+                    <div class="chat-message bot-message">
+                        <strong>Bot:</strong> Hello! I'm an AI chatbot. Ask me anything about AI!
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="chatInput">Your message:</label>
+                    <input type="text" id="chatInput" placeholder="Type your message here..." 
+                           onkeypress="handleChatKeyPress(event)">
+                </div>
+                
+                <button class="btn" onclick="sendChatMessage()">Send Message</button>
+            </div>
+            
+            <!-- Text Analyzer Application -->
+            <div class="app-card">
+                <h2 class="app-title">
+                    <span class="app-icon">📝</span>
+                    Text Analyzer
+                </h2>
+                <p class="app-description">
+                    Analyze any text for sentiment, readability, word frequency, 
+                    and other linguistic patterns.
+                </p>
+                
+                <div class="input-group">
+                    <label for="textInput">Text to analyze:</label>
+                    <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+                </div>
+                
+                <button class="btn" onclick="analyzeText()">Analyze Text</button>
+                
+                <div id="textResults"></div>
+            </div>
+            
+            <!-- Image Analyzer Application -->
+            <div class="app-card">
+                <h2 class="app-title">
+                    <span class="app-icon">🖼️</span>
+                    Image Analyzer
+                </h2>
+                <p class="app-description">
+                    Generate and analyze sample images to understand color distribution, 
+                    brightness, and basic pattern recognition.
+                </p>
+                
+                <div class="input-group">
+                    <label for="imagePattern">Select pattern type:</label>
+                    <select id="imagePattern">
+                        <option value="random">Random Colors</option>
+                        <option value="gradient">Gradient</option>
+                        <option value="checkerboard">Checkerboard</option>
+                        <option value="red_square">Red Square</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="imageSize">Image size:</label>
+                    <select id="imageSize">
+                        <option value="8">8x8 pixels</option>
+                        <option value="12">12x12 pixels</option>
+                        <option value="16">16x16 pixels</option>
+                    </select>
+                </div>
+                
+                <button class="btn" onclick="analyzeImage()">Generate & Analyze Image</button>
+                
+                <canvas id="imageCanvas" class="image-canvas" style="display:none;"></canvas>
+                
+                <div id="imageResults"></div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>🚀 Built for AI Applications Workshop | Educational Demo</p>
+            <p>These are simplified AI implementations for learning purposes</p>
+        </footer>
+    </div>
+
+    <script>
+        // Chatbot functionality
+        let chatHistory = [];
+        
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message to history
+            chatHistory.push({type: 'user', message: message});
+            
+            // Generate bot response (simplified)
+            const botResponse = generateChatResponse(message);
+            chatHistory.push({type: 'bot', message: botResponse});
+            
+            // Update display
+            updateChatDisplay();
+            input.value = '';
+        }
+        
+        function generateChatResponse(input) {
+            const lowerInput = input.toLowerCase();
+            
+            // Simple pattern matching responses
+            if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
+                return "Hello! I'm here to help you learn about AI. What would you like to know?";
+            }
+            
+            if (lowerInput.includes('what is ai') || lowerInput.includes('define ai')) {
+                return "AI (Artificial Intelligence) is the simulation of human intelligence in machines that are programmed to think and learn.";
+            }
+            
+            if (lowerInput.includes('machine learning') || lowerInput.includes('ml')) {
+                return "Machine Learning is a subset of AI that enables systems to automatically learn and improve from experience without being explicitly programmed.";
+            }
+            
+            if (lowerInput.includes('applications') || lowerInput.includes('examples')) {
+                return "AI is used in many areas: virtual assistants, recommendation systems, medical diagnosis, autonomous vehicles, and much more!";
+            }
+            
+            if (lowerInput.includes('goodbye') || lowerInput.includes('bye')) {
+                return "Goodbye! Keep exploring the fascinating world of AI!";
+            }
+            
+            return "That's an interesting question! AI is a broad field with many applications. Could you be more specific about what aspect you'd like to know more about?";
+        }
+        
+        function updateChatDisplay() {
+            const container = document.getElementById('chatHistory');
+            container.innerHTML = '';
+            
+            chatHistory.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = `chat-message ${msg.type}-message`;
+                div.innerHTML = `<strong>${msg.type === 'user' ? 'You' : 'Bot'}:</strong> ${msg.message}`;
+                container.appendChild(div);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+        
+        // Text Analysis functionality
+        function analyzeText() {
+            const text = document.getElementById('textInput').value.trim();
+            
+            if (!text) {
+                alert('Please enter some text to analyze!');
+                return;
+            }
+            
+            const analysis = performTextAnalysis(text);
+            displayTextResults(analysis);
+        }
+        
+        function performTextAnalysis(text) {
+            // Simple text analysis implementation
+            const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+            const characters = text.length;
+            
+            // Simple sentiment analysis
+            const positiveWords = ['good', 'great', 'awesome', 'amazing', 'excellent', 'wonderful', 'fantastic', 'love', 'like', 'happy', 'brilliant'];
+            const negativeWords = ['bad', 'terrible', 'awful', 'horrible', 'hate', 'dislike', 'sad', 'angry', 'frustrated', 'annoyed'];
+            
+            const positiveCount = words.filter(word => positiveWords.includes(word)).length;
+            const negativeCount = words.filter(word => negativeWords.includes(word)).length;
+            
+            let sentiment = 'neutral';
+            let sentimentScore = 0;
+            
+            if (positiveCount > negativeCount) {
+                sentiment = 'positive';
+                sentimentScore = positiveCount - negativeCount;
+            } else if (negativeCount > positiveCount) {
+                sentiment = 'negative';
+                sentimentScore = negativeCount - positiveCount;
+            }
+            
+            // Word frequency
+            const wordCounts = {};
+            const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by']);
+            
+            words.filter(word => !stopWords.has(word)).forEach(word => {
+                wordCounts[word] = (wordCounts[word] || 0) + 1;
+            });
+            
+            const topWords = Object.entries(wordCounts)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+            
+            return {
+                statistics: {
+                    wordCount: words.length,
+                    characterCount: characters,
+                    sentenceCount: sentences,
+                    avgWordLength: words.length ? (words.join('').length / words.length).toFixed(1) : 0
+                },
+                sentiment: {
+                    label: sentiment,
+                    score: sentimentScore,
+                    positiveWords: positiveCount,
+                    negativeWords: negativeCount
+                },
+                topWords: topWords
+            };
+        }
+        
+        function displayTextResults(analysis) {
+            const container = document.getElementById('textResults');
+            
+            container.innerHTML = `
+                <div class="result">
+                    <h3>📊 Analysis Results</h3>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Words:</span>
+                        <span class="result-value">${analysis.statistics.wordCount}</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Characters:</span>
+                        <span class="result-value">${analysis.statistics.characterCount}</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Sentences:</span>
+                        <span class="result-value">${analysis.statistics.sentenceCount}</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Sentiment:</span>
+                        <span class="result-value sentiment-${analysis.sentiment.label}">
+                            ${analysis.sentiment.label.toUpperCase()}
+                        </span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Top Words:</span>
+                        <div>
+                            ${analysis.topWords.map(([word, count]) => 
+                                `<span class="word-freq">${word} (${count})</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Image Analysis functionality
+        function analyzeImage() {
+            const pattern = document.getElementById('imagePattern').value;
+            const size = parseInt(document.getElementById('imageSize').value);
+            
+            const imageData = generateSampleImage(size, size, pattern);
+            const analysis = performImageAnalysis(imageData);
+            
+            displayImageResults(analysis, imageData, size);
+        }
+        
+        function generateSampleImage(width, height, pattern) {
+            const image = [];
+            
+            for (let y = 0; y < height; y++) {
+                const row = [];
+                for (let x = 0; x < width; x++) {
+                    let pixel;
+                    
+                    switch (pattern) {
+                        case 'random':
+                            pixel = [
+                                Math.floor(Math.random() * 256),
+                                Math.floor(Math.random() * 256),
+                                Math.floor(Math.random() * 256)
+                            ];
+                            break;
+                        case 'gradient':
+                            const intensity = Math.floor((x / width) * 255);
+                            pixel = [intensity, intensity, intensity];
+                            break;
+                        case 'checkerboard':
+                            pixel = (x + y) % 2 === 0 ? [255, 255, 255] : [0, 0, 0];
+                            break;
+                        case 'red_square':
+                            const margin = 2;
+                            if (x >= margin && x < width - margin && y >= margin && y < height - margin) {
+                                pixel = [255, 0, 0];
+                            } else {
+                                pixel = [255, 255, 255];
+                            }
+                            break;
+                        default:
+                            pixel = [128, 128, 128];
+                    }
+                    
+                    row.push(pixel);
+                }
+                image.push(row);
+            }
+            
+            return image;
+        }
+        
+        function performImageAnalysis(imageData) {
+            const height = imageData.length;
+            const width = imageData[0].length;
+            const pixels = [];
+            
+            // Flatten pixels
+            for (let row of imageData) {
+                for (let pixel of row) {
+                    pixels.push(pixel);
+                }
+            }
+            
+            // Color analysis
+            const colorCounts = {};
+            let totalBrightness = 0;
+            
+            pixels.forEach(([r, g, b]) => {
+                const color = `rgb(${r},${g},${b})`;
+                colorCounts[color] = (colorCounts[color] || 0) + 1;
+                
+                // Calculate brightness using luminance formula
+                totalBrightness += 0.299 * r + 0.587 * g + 0.114 * b;
+            });
+            
+            const avgBrightness = totalBrightness / pixels.length;
+            const uniqueColors = Object.keys(colorCounts).length;
+            
+            // Get dominant colors
+            const sortedColors = Object.entries(colorCounts)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 3);
+            
+            return {
+                dimensions: {
+                    width: width,
+                    height: height,
+                    totalPixels: pixels.length
+                },
+                colors: {
+                    uniqueColors: uniqueColors,
+                    dominantColors: sortedColors
+                },
+                brightness: {
+                    average: Math.round(avgBrightness),
+                    category: avgBrightness > 200 ? 'bright' : avgBrightness > 100 ? 'normal' : 'dark'
+                }
+            };
+        }
+        
+        function displayImageResults(analysis, imageData, size) {
+            // Draw image on canvas
+            const canvas = document.getElementById('imageCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const scale = Math.max(1, Math.floor(200 / size)); // Scale up small images
+            canvas.width = size * scale;
+            canvas.height = size * scale;
+            canvas.style.display = 'block';
+            
+            for (let y = 0; y < size; y++) {
+                for (let x = 0; x < size; x++) {
+                    const [r, g, b] = imageData[y][x];
+                    ctx.fillStyle = `rgb(${r},${g},${b})`;
+                    ctx.fillRect(x * scale, y * scale, scale, scale);
+                }
+            }
+            
+            // Display results
+            const container = document.getElementById('imageResults');
+            const dims = analysis.dimensions;
+            const colors = analysis.colors;
+            const brightness = analysis.brightness;
+            
+            container.innerHTML = `
+                <div class="result">
+                    <h3>🖼️ Image Analysis Results</h3>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Dimensions:</span>
+                        <span class="result-value">${dims.width}x${dims.height} (${dims.totalPixels} pixels)</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Unique Colors:</span>
+                        <span class="result-value">${colors.uniqueColors}</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Average Brightness:</span>
+                        <span class="result-value">${brightness.average} (${brightness.category})</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Dominant Colors:</span>
+                        <div>
+                            ${colors.dominantColors.map(([color, count]) => 
+                                `<span class="word-freq" style="background-color: ${color}; color: white;">${count} pixels</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Initialize with welcome message
+        document.addEventListener('DOMContentLoaded', function() {
+            chatHistory.push({
+                type: 'bot', 
+                message: "Hello! I'm an AI chatbot. Ask me anything about AI!"
+            });
+            updateChatDisplay();
+        });
+    </script>
+</body>
+</html>

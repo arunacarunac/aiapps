@@ -1,0 +1,40 @@
+# Test artifacts and reports
+test-reports/
+htmlcov/
+coverage.xml
+.coverage
+.pytest_cache/
+*.pyc
+__pycache__/
+.tox/
+
+# Development environment
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Python virtual environments
+venv/
+env/
+.env
+.venv/
+
+# Temporary files
+/tmp/
+*.tmp
+*.log
+
+# Node.js (if used for any tooling)
+node_modules/
+npm-debug.log*
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
